@@ -1,9 +1,9 @@
 #!/bin/sh
 # There is no bash on ESXi, only sh (but not a real sh, just busybox).
 # Determine the latest ESXi update here:
-# https://esxi-patches.v-front.de/ESXi-6.7.0.html
+# https://esxi-patches.v-front.de/
 
-# SSH and Shell are enabled by default on Packet ESXi servers
+# SSH and Shell are enabled by default on Equinix Metal ESXi servers
 
 echo "Enabling swap"
 # Swap must be enabled on the datastore. Otherwise, the upgrade may fail with a "no space left" error.

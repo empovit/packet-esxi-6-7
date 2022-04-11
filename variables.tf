@@ -1,10 +1,10 @@
 variable "auth_token" {
-  description = "Your Packet API token"
+  description = "Your Equinix Metal API token"
   default = "TOKEN"
 }
 
 variable "project_id" {
-  description = "Your Packet project ID"
+  description = "Your Equinix Metal project ID"
   default = "PROJECT_ID"
 }
 
@@ -29,12 +29,12 @@ variable "amount" {
 }
 
 variable "esxi_update_filename" {
-  description = "The specific update version that your servers will be updated to. Note that the Packet portal and API will still show ESXi 6.5 as the OS but this script adds a tag with the update filename specified below. You can check all ESXi update versions/filenames here: https://esxi-patches.v-front.de/ESXi-6.7.0.html"
-  default = "ESXi-6.7.0-20191104001-standard"
+  description = "The specific update version that your servers will be updated to. Note that the Equinix Metal portal and API will still show ESXi 6.5 as the OS but this script adds a tag with the update filename specified below. You can check all ESXi update versions/filenames here: https://esxi-patches.v-front.de/"
+  default = "ESXi-7.0U3d-19482537-standard"
 }
 
 variable "public_ipv4_subnet_size" {
-  description = "Public IPv4 management subnet size, cidr and quanity should match, quantity should be set as the total amount of IPs in the subnet. Ex: For /28 subnet, amount = 16. /29 is default for ESXi on Packet."
+  description = "Public IPv4 management subnet size, cidr and quanity should match, quantity should be set as the total amount of IPs in the subnet. Ex: For /28 subnet, amount = 16. /29 is default for ESXi on Equinix Metal."
   default = [
     {
       "quantity" : 8,

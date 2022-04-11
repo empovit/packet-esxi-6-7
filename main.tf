@@ -1,17 +1,17 @@
-provider "packet" {
+provider "metal" {
   auth_token = "${var.auth_token}"
 }
 
 # Requesting reserved subnets if user wants a custom subnet size (IP Allocation)
-resource "packet_reserved_ip_block" "reserved_ip_blocks" {
+resource "metal_reserved_ip_block" "reserved_ip_blocks" {
   count      = var.amount
   project_id = var.project_id
   facility   = var.facility
   quantity   = jsonencode(element(var.public_ipv4_subnet_size.*.quantity, count.index))
 }
 
-# Provisioning Packet servers
-resource "packet_device" "servers" {
+# Provisioning Equinix Metal servers
+resource "metal_device" "servers" {
   count            = "${var.amount}"
   hostname         = "${format("%s-%s-%d", "${var.facility}", "ESXi-node", count.index)}"
   plan             = "${var.plan}"
@@ -23,7 +23,7 @@ resource "packet_device" "servers" {
   ip_address {
     type            = "public_ipv4"
     cidr            = jsonencode(element(var.public_ipv4_subnet_size.*.cidr, count.index))
-    reservation_ids = [element(packet_reserved_ip_block.reserved_ip_blocks.*.id, count.index)]
+    reservation_ids = [element(metal_reserved_ip_block.reserved_ip_blocks.*.id, count.index)]
   }
   ip_address {
     type = "private_ipv4"
@@ -36,7 +36,7 @@ resource "packet_device" "servers" {
 # Waiting for the post provision reboot process to complete
 resource "null_resource" "rebooting" {
 
-  depends_on = [packet_device.servers]
+  depends_on = [metal_device.servers]
 
   provisioner "local-exec" {
     command = "sleep 250"
@@ -63,7 +63,7 @@ resource "null_resource" "upgrade-nodes" {
   connection {
     user = "root"
     private_key = "${file("${var.private_key_filename}")}"
-    host = "${element(packet_device.servers.*.access_public_ipv4, count.index)}"
+    host = "${element(metal_device.servers.*.access_public_ipv4, count.index)}"
   }
 
   provisioner "file" {
